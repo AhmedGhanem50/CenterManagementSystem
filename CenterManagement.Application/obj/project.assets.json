@@ -646,6 +646,15 @@
           }
         }
       },
+      "QRCoder/1.4.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/QRCoder.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {}
+        }
+      },
       "System.ClientModel/1.0.0": {
         "type": "package",
         "dependencies": {
@@ -2059,6 +2068,27 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "QRCoder/1.4.3": {
+      "sha512": "fWuFqjm8GTlEb2GqBl3Hi8HZZeZQwBSHxvRPtPjyNbT82H0ff0JwavKRBmMaXCno1Av6McPC8aJzri0Mj2w9Jw==",
+      "type": "package",
+      "path": "qrcoder/1.4.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/QRCoder.dll",
+        "lib/net40/QRCoder.dll",
+        "lib/net5.0-windows7.0/QRCoder.dll",
+        "lib/net5.0/QRCoder.dll",
+        "lib/net6.0-windows7.0/QRCoder.dll",
+        "lib/net6.0/QRCoder.dll",
+        "lib/netstandard1.3/QRCoder.dll",
+        "lib/netstandard2.0/QRCoder.dll",
+        "nuget-icon.png",
+        "nuget-readme.md",
+        "qrcoder.1.4.3.nupkg.sha512",
+        "qrcoder.nuspec"
+      ]
+    },
     "System.ClientModel/1.0.0": {
       "sha512": "I3CVkvxeqFYjIVEP59DnjbeoGNfo/+SZrCLpRz2v/g0gpCHaEMPtWSY0s9k/7jR1rAsLNg2z2u1JRB76tPjnIw==",
       "type": "package",
@@ -2919,27 +2949,28 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "CenterManagement.Domain >= 1.0.0",
-      "CenterManagement.Infrastructure >= 1.0.0"
+      "CenterManagement.Infrastructure >= 1.0.0",
+      "QRCoder >= 1.4.3"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Administrator\\.nuget\\packages\\": {},
+    "C:\\Users\\hbeba\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj",
+      "projectUniqueName": "C:\\Users\\hbeba\\source\\repos\\AhmedGhanem50\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj",
       "projectName": "CenterManagement.Application",
-      "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj",
-      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\obj\\",
+      "projectPath": "C:\\Users\\hbeba\\source\\repos\\AhmedGhanem50\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj",
+      "packagesPath": "C:\\Users\\hbeba\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\hbeba\\source\\repos\\AhmedGhanem50\\CenterManagementSystem\\CenterManagement.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\hbeba\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -2948,18 +2979,17 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj": {
-              "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj"
+            "C:\\Users\\hbeba\\source\\repos\\AhmedGhanem50\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj": {
+              "projectPath": "C:\\Users\\hbeba\\source\\repos\\AhmedGhanem50\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj"
             },
-            "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj": {
-              "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj"
+            "C:\\Users\\hbeba\\source\\repos\\AhmedGhanem50\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\hbeba\\source\\repos\\AhmedGhanem50\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj"
             }
           }
         }
@@ -2974,11 +3004,17 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
+        "dependencies": {
+          "QRCoder": {
+            "target": "Package",
+            "version": "[1.4.3, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",
@@ -2990,20 +3026,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.27, 8.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.27, 8.0.27]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.27, 8.0.27]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -3012,7 +3034,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.314/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

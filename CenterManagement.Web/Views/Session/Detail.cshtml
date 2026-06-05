@@ -1,0 +1,410 @@
+@model SessionDetailViewModel
+
+@{
+    ViewData["Title"] = $"Session — {Model.SubjectName}";
+}
+
+<!-- Session Header -->
+<div class="mb-8">
+    <div class="flex items-center gap-3 mb-2">
+        <a asp-controller="Session" asp-action="Index"
+           class="p-2 rounded-lg hover:bg-surface-container-low transition-colors text-on-surface-variant">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <h1 class="text-headline-lg font-headline-lg text-on-surface">Session Detail</h1>
+    </div>
+
+    <!-- Session Info Card -->
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Subject / Course</p>
+                <p class="font-body-lg text-body-lg text-on-surface font-semibold mt-1">@Model.SubjectName — @Model.CourseName</p>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Group</p>
+                <p class="font-body-lg text-body-lg text-on-surface font-semibold mt-1">@Model.GroupName</p>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Instructor</p>
+                <p class="font-body-lg text-body-lg text-on-surface font-semibold mt-1">@Model.InstructorName</p>
+            </div>
+            <div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Grade Level</p>
+                <p class="font-body-lg text-body-lg text-on-surface font-semibold mt-1">@Model.GradeLevelName</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-6 mt-4 pt-4 border-t border-outline-variant">
+            <div class="flex items-center gap-2 text-on-surface-variant">
+                <span class="material-symbols-outlined text-primary">calendar_today</span>
+                <span class="font-body-md">@Model.SessionDate.ToString("ddd, MMM dd, yyyy")</span>
+            </div>
+            <div class="flex items-center gap-2 text-on-surface-variant">
+                <span class="material-symbols-outlined text-primary">schedule</span>
+                <span class="font-body-md">@Model.StartTime.ToString(@"hh\:mm") — @Model.EndTime.ToString(@"hh\:mm")</span>
+            </div>
+            @if (Model.IsCanceled)
+            {
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-error/10 text-error font-label-md text-label-md">
+                    <span class="material-symbols-outlined text-[16px]">cancel</span> Canceled
+                </span>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- QR Scanner Panel & Attendance Summary -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+
+    <!-- QR Scanner Panel -->
+    <div class="lg:col-span-1 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-6">
+        <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-primary text-[32px]">qr_code_scanner</span>
+            </div>
+            <h2 class="text-headline-sm font-headline-sm text-on-surface mb-2">Ready to Scan</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mb-6">
+                Place the scanner cursor in the field below, or type a QR code manually.
+            </p>
+            <div class="w-full flex gap-2">
+                <input id="qr-input" type="text"
+                       class="flex-1 px-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md placeholder:text-outline"
+                       placeholder="Type or scan QR code..."
+                       autocomplete="off" />
+                <button id="scan-btn" onclick="processScan()"
+                        class="px-5 py-3 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary/90 active:scale-95 transition-all shadow-sm">
+                    <span class="material-symbols-outlined text-[20px]">send</span>
+                </button>
+            </div>
+
+            <!-- Scan Error Alert -->
+            <div id="scan-error-alert" class="hidden w-full mt-4 p-3 rounded-lg bg-error-container text-on-error-container font-body-sm text-body-sm flex items-center gap-2 animate-pulse">
+                <span class="material-symbols-outlined text-[18px]">error</span>
+                <span id="scan-error-msg"></span>
+            </div>
+
+            <!-- Scan Success Flash -->
+            <div id="scan-success-alert" class="hidden w-full mt-4 p-3 rounded-lg bg-green-100 text-green-800 font-body-sm text-body-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                <span id="scan-success-msg"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Summary Pills -->
+    <div class="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-5 flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+                <span class="material-symbols-outlined text-blue-600">groups</span>
+            </div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Enrolled</p>
+            <p id="sum-enrolled" class="text-headline-md font-headline-md text-on-surface mt-1">0</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-5 flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-3">
+                <span class="material-symbols-outlined text-green-600">check_circle</span>
+            </div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Present</p>
+            <p id="sum-present" class="text-headline-md font-headline-md text-green-700 mt-1">0</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-5 flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mb-3">
+                <span class="material-symbols-outlined text-orange-600">schedule</span>
+            </div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Late</p>
+            <p id="sum-late" class="text-headline-md font-headline-md text-orange-600 mt-1">0</p>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-5 flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-3">
+                <span class="material-symbols-outlined text-red-600">cancel</span>
+            </div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Absent</p>
+            <p id="sum-absent" class="text-headline-md font-headline-md text-red-600 mt-1">0</p>
+        </div>
+    </div>
+</div>
+
+<!-- Attendance Rate Bar -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-4 mb-8">
+    <div class="flex items-center justify-between mb-2">
+        <span class="font-label-md text-label-md text-on-surface-variant">Attendance Rate</span>
+        <span id="sum-rate" class="font-label-md text-label-md text-primary font-bold">0%</span>
+    </div>
+    <div class="w-full h-3 bg-surface-container-low rounded-full overflow-hidden">
+        <div id="sum-rate-bar" class="h-full bg-gradient-to-r from-primary to-blue-400 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+    </div>
+</div>
+
+<!-- Attendance Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+    <div class="px-6 py-4 border-b border-outline-variant flex items-center justify-between">
+        <h2 class="text-headline-sm font-headline-sm text-on-surface">Check-In Log</h2>
+        <div class="relative w-64">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+            <input id="attend-search" type="text"
+                   class="w-full pl-9 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-sm placeholder:text-outline"
+                   placeholder="Search students..." oninput="fetchAttendanceList()" />
+        </div>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="bg-surface-container-low">
+                    <th class="px-6 py-3 text-left font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Student</th>
+                    <th class="px-6 py-3 text-left font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Check-In</th>
+                    <th class="px-6 py-3 text-center font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="attend-tbody" class="divide-y divide-outline-variant">
+                <!-- Populated by JS -->
+            </tbody>
+        </table>
+    </div>
+    <div id="attend-empty" class="hidden px-6 py-12 text-center">
+        <span class="material-symbols-outlined text-[48px] text-outline mb-2">event_busy</span>
+        <p class="font-body-md text-on-surface-variant">No attendance records yet. Start scanning!</p>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const SESSION_ID = @Model.SessionId;
+
+    // =========================================
+    // Anti-Forgery Token Helper
+    // =========================================
+    function getAntiForgeryToken() {
+        const token = document.querySelector('input[name="__RequestVerificationToken"]');
+        return token ? token.value : '';
+    }
+
+    // =========================================
+    // QR Scan Processing
+    // =========================================
+    async function processScan() {
+        const input = document.getElementById('qr-input');
+        const qrCode = input.value.trim();
+        if (!qrCode) return;
+
+        // Hide any previous alerts
+        document.getElementById('scan-error-alert').classList.add('hidden');
+        document.getElementById('scan-success-alert').classList.add('hidden');
+
+        try {
+            const res = await fetch('/Attendance/Scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                },
+                body: JSON.stringify({ qrCode })
+            });
+            const data = await res.json();
+            input.value = '';
+            input.focus();
+
+            if (!data.success && data.errorMessage && data.errorMessage !== 'Already scanned') {
+                showError(data.errorMessage);
+                return;
+            }
+
+            if (data.errorMessage === 'Already scanned') {
+                showSuccess(`${data.studentName ?? 'Student'} — already scanned`);
+            } else {
+                showSuccess(`${data.studentName ?? 'Student'} checked in${data.isLate ? ' (Late)' : ''}`);
+            }
+
+            prependAttendanceRow(data);
+            fetchSummary();
+        } catch (err) {
+            showError('Network error. Please try again.');
+        }
+    }
+
+    // =========================================
+    // Alert Helpers
+    // =========================================
+    function showError(msg) {
+        const alert = document.getElementById('scan-error-alert');
+        document.getElementById('scan-error-msg').textContent = msg;
+        alert.classList.remove('hidden');
+        setTimeout(() => alert.classList.add('hidden'), 4000);
+    }
+
+    function showSuccess(msg) {
+        const alert = document.getElementById('scan-success-alert');
+        document.getElementById('scan-success-msg').textContent = msg;
+        alert.classList.remove('hidden');
+        setTimeout(() => alert.classList.add('hidden'), 3000);
+    }
+
+    // =========================================
+    // Prepend Row After Scan
+    // =========================================
+    function prependAttendanceRow(data) {
+        const tbody = document.getElementById('attend-tbody');
+        document.getElementById('attend-empty').classList.add('hidden');
+
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-surface-container-low/50 transition-colors animate-[fadeIn_0.3s_ease-out]';
+        row.innerHTML = `
+            <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                    <div class="h-9 w-9 rounded-full bg-primary-container flex items-center justify-center text-white font-label-md text-[13px]">
+                        ${data.studentImagePath
+                            ? `<img src="${data.studentImagePath}" class="h-9 w-9 rounded-full object-cover" />`
+                            : `<span class="material-symbols-outlined text-[18px]">person</span>`}
+                    </div>
+                    <span class="font-body-md text-on-surface">${data.studentName ?? '—'}</span>
+                </div>
+            </td>
+            <td class="px-6 py-4">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-label-sm font-label-sm ${data.isLate ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}">
+                    <span class="w-1.5 h-1.5 rounded-full ${data.isLate ? 'bg-orange-500' : 'bg-green-500'}"></span>
+                    ${data.isLate ? 'Late' : 'Present'}
+                </span>
+            </td>
+            <td class="px-6 py-4 font-body-sm text-on-surface-variant">
+                ${data.scanTime ? new Date(data.scanTime).toLocaleTimeString() : '—'}
+            </td>
+            <td class="px-6 py-4 text-center">
+                <div class="flex items-center justify-center gap-1">
+                    <button onclick="markManual(${data.studentProfileId ?? 0}, ${SESSION_ID}, true, false)"
+                            class="p-1.5 rounded-lg hover:bg-green-100 text-green-600 transition-colors" title="Mark Present">
+                        <span class="material-symbols-outlined text-[18px]">check</span>
+                    </button>
+                    <button onclick="markManual(${data.studentProfileId ?? 0}, ${SESSION_ID}, false, false)"
+                            class="p-1.5 rounded-lg hover:bg-red-100 text-red-600 transition-colors" title="Mark Absent">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                </div>
+            </td>
+        `;
+        tbody.prepend(row);
+    }
+
+    // =========================================
+    // Fetch Summary Stats
+    // =========================================
+    async function fetchSummary() {
+        try {
+            const res = await fetch(`/Attendance/SessionSummary/${SESSION_ID}`);
+            const data = await res.json();
+            document.getElementById('sum-enrolled').textContent = data.totalEnrolled ?? 0;
+            document.getElementById('sum-present').textContent = data.presentCount ?? 0;
+            document.getElementById('sum-late').textContent = data.lateCount ?? 0;
+            document.getElementById('sum-absent').textContent = data.absentCount ?? 0;
+
+            const rate = data.attendanceRatePercent ?? 0;
+            document.getElementById('sum-rate').textContent = rate.toFixed(1) + '%';
+            document.getElementById('sum-rate-bar').style.width = rate + '%';
+        } catch { }
+    }
+
+    // =========================================
+    // Fetch Attendance List
+    // =========================================
+    async function fetchAttendanceList() {
+        try {
+            const search = document.getElementById('attend-search')?.value || '';
+            const res = await fetch(`/Attendance/SessionList/${SESSION_ID}?page=1&q=${encodeURIComponent(search)}`);
+            const data = await res.json();
+            const tbody = document.getElementById('attend-tbody');
+            tbody.innerHTML = '';
+
+            const items = data.items ?? [];
+            if (items.length === 0) {
+                document.getElementById('attend-empty').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('attend-empty').classList.add('hidden');
+
+            items.forEach(a => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-surface-container-low/50 transition-colors';
+                row.innerHTML = `
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="h-9 w-9 rounded-full bg-primary-container flex items-center justify-center text-white font-label-md text-[13px]">
+                                ${a.studentImagePath
+                                    ? `<img src="${a.studentImagePath}" class="h-9 w-9 rounded-full object-cover" />`
+                                    : `<span class="material-symbols-outlined text-[18px]">person</span>`}
+                            </div>
+                            <span class="font-body-md text-on-surface">${a.studentName}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-label-sm font-label-sm ${a.isLate ? 'bg-orange-100 text-orange-700' : (a.isPresent ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700')}">
+                            <span class="w-1.5 h-1.5 rounded-full ${a.isLate ? 'bg-orange-500' : (a.isPresent ? 'bg-green-500' : 'bg-red-500')}"></span>
+                            ${a.isLate ? 'Late' : (a.isPresent ? 'Present' : 'Absent')}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 font-body-sm text-on-surface-variant">
+                        ${new Date(a.scanTime).toLocaleTimeString()}
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center gap-1">
+                            <button onclick="markManual(${a.studentProfileId}, ${SESSION_ID}, true, false)"
+                                    class="p-1.5 rounded-lg hover:bg-green-100 text-green-600 transition-colors" title="Mark Present">
+                                <span class="material-symbols-outlined text-[18px]">check</span>
+                            </button>
+                            <button onclick="markManual(${a.studentProfileId}, ${SESSION_ID}, false, false)"
+                                    class="p-1.5 rounded-lg hover:bg-red-100 text-red-600 transition-colors" title="Mark Absent">
+                                <span class="material-symbols-outlined text-[18px]">close</span>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        } catch { }
+    }
+
+    // =========================================
+    // Manual Mark
+    // =========================================
+    async function markManual(studentProfileId, sessionId, isPresent, isLate) {
+        try {
+            await fetch('/Attendance/MarkManual', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                },
+                body: JSON.stringify({ studentProfileId, sessionId, isPresent, isLate })
+            });
+            fetchAttendanceList();
+            fetchSummary();
+        } catch { }
+    }
+
+    // =========================================
+    // Keyboard Support — Enter to Scan
+    // =========================================
+    document.getElementById('qr-input').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            processScan();
+        }
+    });
+
+    // =========================================
+    // Init
+    // =========================================
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchAttendanceList();
+        fetchSummary();
+        setInterval(fetchSummary, 30000);
+        // Auto-focus QR input for hands-free scanning
+        document.getElementById('qr-input')?.focus();
+    });
+</script>
+
+<style>
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+}

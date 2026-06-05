@@ -93,6 +93,26 @@ namespace CenterManagement.Infrastructure.Seed
             }
 
             // =========================
+            // Seed INVALID Placeholder User
+            // (for QrCodeLog FK when QR fails to decode)
+            // =========================
+
+            var invalidUser = await userManager.FindByIdAsync("INVALID");
+            if (invalidUser == null)
+            {
+                var placeholder = new ApplicationUser
+                {
+                    Id = "INVALID",
+                    FullName = "Invalid QR Placeholder",
+                    UserName = "invalid@placeholder.local",
+                    Email = "invalid@placeholder.local",
+                    EmailConfirmed = true,
+                    IsActive = false
+                };
+                await userManager.CreateAsync(placeholder, "Placeholder@999");
+            }
+
+            // =========================
             // Seed Subjects
             // =========================
 

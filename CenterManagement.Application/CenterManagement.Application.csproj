@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="QRCoder" Version="1.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CenterManagement.Domain\CenterManagement.Domain.csproj" />
     <ProjectReference Include="..\CenterManagement.Infrastructure\CenterManagement.Infrastructure.csproj" />
   </ItemGroup>

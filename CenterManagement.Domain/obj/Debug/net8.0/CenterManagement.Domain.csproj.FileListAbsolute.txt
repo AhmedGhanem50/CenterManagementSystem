@@ -23,3 +23,16 @@ D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Domain\obj\De
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\refint\CenterManagement.Domain.dll
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.pdb
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\ref\CenterManagement.Domain.dll
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.deps.json
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.dll
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.pdb
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.csproj.AssemblyReference.cache
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.AssemblyInfoInputs.cache
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.AssemblyInfo.cs
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.csproj.CoreCompileInputs.cache
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.sourcelink.json
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.dll
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\refint\CenterManagement.Domain.dll
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.pdb
+C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\ref\CenterManagement.Domain.dll

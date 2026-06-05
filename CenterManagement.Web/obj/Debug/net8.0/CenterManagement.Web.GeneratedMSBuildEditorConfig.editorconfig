@@ -1,7 +1,5 @@
 is_global = true
 build_property.TargetFramework = net8.0
-build_property.TargetFrameworkIdentifier = .NETCoreApp
-build_property.TargetFrameworkVersion = v8.0
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
 build_property.ProjectTypeGuids = 
@@ -11,77 +9,81 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CenterManagement.Web
 build_property.RootNamespace = CenterManagement.Web
-build_property.ProjectDir = D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Web\
+build_property.ProjectDir = C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Web\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Web
+build_property.MSBuildProjectDirectory = C:\Users\hbeba\source\repos\AhmedGhanem50\CenterManagementSystem\CenterManagement.Web
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Auth/AccessDenied.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Auth/AccessDenied.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxBY2Nlc3NEZW5pZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Auth/Login.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Auth/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Dashboard/Index.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Dashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Home/Index.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Home/Privacy.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Shared/Error.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Session/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2Vzc2lvblxEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Shared/_LayoutEmpty.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Shared/_LayoutEmpty.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRFbXB0eS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Student/Create.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Student/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Student/Edit.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Student/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Student/Index.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Student/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Student/Profile.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Student/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxQcm9maWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Student/Transfer.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Student/Transfer.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxUcmFuc2Zlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/_ViewImports.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/_ViewStart.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/ITI/BACKEND/MVC/Project/CenterManagementSystem/CenterManagement.Web/Views/Shared/_Layout.cshtml]
+[C:/Users/hbeba/source/repos/AhmedGhanem50/CenterManagementSystem/CenterManagement.Web/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-991cze3utg
