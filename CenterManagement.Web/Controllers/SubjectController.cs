@@ -36,6 +36,14 @@ namespace CenterManagement.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Verify that the subject name does not already exist before inserting
+                bool nameExists = await _context.Subjects.AnyAsync(s => s.Name == subject.Name);
+                if (nameExists)
+                {
+                    ModelState.AddModelError("Name", "This subject name already exists. Please choose a different name.");
+                    return View(subject);
+                }
+
                 _context.Add(subject);
                 await _context.SaveChangesAsync();
                 TempData["Success"] = "Subject created successfully.";
@@ -64,6 +72,14 @@ namespace CenterManagement.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                // Verify that the new name is not taken by another subject (excluding the current record itself)
+                bool nameExists = await _context.Subjects.AnyAsync(s => s.Name == subject.Name && s.Id != id);
+                if (nameExists)
+                {
+                    ModelState.AddModelError("Name", "This subject name is already in use by another subject.");
+                    return View(subject);
+                }
+
                 try
                 {
                     _context.Update(subject);

@@ -16,3 +16,23 @@ D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\o
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\refint\CenterManagement.Application.dll
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.pdb
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\ref\CenterManagement.Application.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Application.deps.json
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Application.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Application.pdb
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Domain.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Infrastructure.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Domain.pdb
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Infrastructure.pdb
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.csproj.AssemblyReference.cache
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.AssemblyInfoInputs.cache
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.AssemblyInfo.cs
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.csproj.CoreCompileInputs.cache
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.sourcelink.json
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterMa.D6905B41.Up2Date
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\refint\CenterManagement.Application.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.pdb
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\ref\CenterManagement.Application.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\bin\Debug\net8.0\CenterManagement.Application.runtimeconfig.json
+D:\Project MVC\CenterManagementSystem\CenterManagement.Application\obj\Debug\net8.0\CenterManagement.Application.genruntimeconfig.cache

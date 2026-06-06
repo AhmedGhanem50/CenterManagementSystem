@@ -562,6 +562,18 @@
           }
         }
       },
+      "Microsoft.EntityFrameworkCore.Tools/8.0.27": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Design": "8.0.27"
+        },
+        "compile": {
+          "lib/net8.0/_._": {}
+        },
+        "runtime": {
+          "lib/net8.0/_._": {}
+        }
+      },
       "Microsoft.Extensions.Caching.Abstractions/8.0.0": {
         "type": "package",
         "dependencies": {
@@ -1645,6 +1657,8 @@
         "dependencies": {
           "CenterManagement.Domain": "1.0.0",
           "CenterManagement.Infrastructure": "1.0.0",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.27",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.27",
           "QRCoder": "1.4.3"
         },
         "compile": {
@@ -1661,7 +1675,9 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.27"
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.27",
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.27",
+          "QRCoder": "1.4.3"
         },
         "compile": {
           "bin/placeholder/CenterManagement.Domain.dll": {}
@@ -1676,7 +1692,8 @@
         "dependencies": {
           "CenterManagement.Domain": "1.0.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.27",
-          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.27"
+          "Microsoft.EntityFrameworkCore.SqlServer": "8.0.27",
+          "QRCoder": "1.4.3"
         },
         "compile": {
           "bin/placeholder/CenterManagement.Infrastructure.dll": {}
@@ -2602,6 +2619,32 @@
         "lib/net8.0/Microsoft.EntityFrameworkCore.SqlServer.xml",
         "microsoft.entityframeworkcore.sqlserver.8.0.27.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlserver.nuspec"
+      ]
+    },
+    "Microsoft.EntityFrameworkCore.Tools/8.0.27": {
+      "sha512": "TUihJinWo6y9YIK9JtOodQAYKFPwM688+m/YQsA1DxhkcaNbZg4wbxxwu4emjI1cBJRoAbiq9+nXJnO3a70CoQ==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore.tools/8.0.27",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "docs/PACKAGE.md",
+        "lib/net8.0/_._",
+        "microsoft.entityframeworkcore.tools.8.0.27.nupkg.sha512",
+        "microsoft.entityframeworkcore.tools.nuspec",
+        "tools/EntityFrameworkCore.PS2.psd1",
+        "tools/EntityFrameworkCore.PS2.psm1",
+        "tools/EntityFrameworkCore.psd1",
+        "tools/EntityFrameworkCore.psm1",
+        "tools/about_EntityFrameworkCore.help.txt",
+        "tools/init.ps1",
+        "tools/net461/any/ef.exe",
+        "tools/net461/win-arm64/ef.exe",
+        "tools/net461/win-x86/ef.exe",
+        "tools/netcoreapp2.0/any/ef.dll",
+        "tools/netcoreapp2.0/any/ef.runtimeconfig.json"
       ]
     },
     "Microsoft.Extensions.Caching.Abstractions/8.0.0": {
@@ -4463,29 +4506,32 @@
       "CenterManagement.Application >= 1.0.0",
       "CenterManagement.Domain >= 1.0.0",
       "CenterManagement.Infrastructure >= 1.0.0",
+      "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 8.0.27",
       "Microsoft.AspNetCore.Identity.UI >= 8.0.27",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.27",
+      "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.27",
+      "Microsoft.EntityFrameworkCore.Tools >= 8.0.27",
       "QRCoder >= 1.4.3"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Administrator\\.nuget\\packages\\": {},
+    "C:\\Users\\Alaa\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\CenterManagement.Web.csproj",
+      "projectUniqueName": "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Web\\CenterManagement.Web.csproj",
       "projectName": "CenterManagement.Web",
-      "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\CenterManagement.Web.csproj",
-      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Web\\obj\\",
+      "projectPath": "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Web\\CenterManagement.Web.csproj",
+      "packagesPath": "C:\\Users\\Alaa\\.nuget\\packages\\",
+      "outputPath": "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Alaa\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4494,21 +4540,20 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj": {
-              "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj"
+            "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj": {
+              "projectPath": "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Application\\CenterManagement.Application.csproj"
             },
-            "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj": {
-              "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj"
+            "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj": {
+              "projectPath": "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Domain\\CenterManagement.Domain.csproj"
             },
-            "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj": {
-              "projectPath": "D:\\ITI\\BACKEND\\MVC\\Project\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj"
+            "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj": {
+              "projectPath": "D:\\Project MVC\\CenterManagementSystem\\CenterManagement.Infrastructure\\CenterManagement.Infrastructure.csproj"
             }
           }
         }
@@ -4523,17 +4568,31 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[8.0.27, )"
+          },
           "Microsoft.AspNetCore.Identity.UI": {
             "target": "Package",
             "version": "[8.0.27, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[8.0.27, )"
+          },
+          "Microsoft.EntityFrameworkCore.SqlServer": {
+            "target": "Package",
+            "version": "[8.0.27, )"
+          },
+          "Microsoft.EntityFrameworkCore.Tools": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",
@@ -4555,24 +4614,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.27, 8.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[8.0.27, 8.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.27, 8.0.27]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.27, 8.0.27]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -4581,7 +4622,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.314/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

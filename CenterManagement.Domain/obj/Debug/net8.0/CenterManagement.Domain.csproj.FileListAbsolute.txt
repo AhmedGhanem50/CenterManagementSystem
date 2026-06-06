@@ -11,3 +11,18 @@ D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Domain\obj\De
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\refint\CenterManagement.Domain.dll
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.pdb
 D:\ITI\BACKEND\MVC\Project\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\ref\CenterManagement.Domain.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.deps.json
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.pdb
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.csproj.AssemblyReference.cache
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.AssemblyInfoInputs.cache
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.AssemblyInfo.cs
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.csproj.CoreCompileInputs.cache
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.sourcelink.json
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\refint\CenterManagement.Domain.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.pdb
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\ref\CenterManagement.Domain.dll
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\bin\Debug\net8.0\CenterManagement.Domain.runtimeconfig.json
+D:\Project MVC\CenterManagementSystem\CenterManagement.Domain\obj\Debug\net8.0\CenterManagement.Domain.genruntimeconfig.cache

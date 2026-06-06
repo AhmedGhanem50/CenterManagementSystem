@@ -4,55 +4,85 @@
     Layout = "_LayoutEmpty";
 }
 
-<div class="min-h-screen bg-background flex items-center justify-center px-4">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm mx-auto p-8">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <h1 class="text-headline-md font-headline-md font-bold text-primary tracking-tight">EduManager Pro</h1>
-            <p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Sign in to your account</p>
+<div class="min-h-screen bg-slate-900 flex font-sans">
+
+    <div class="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12 bg-cover bg-center"
+         style="background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.95)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1920');">
+
+        <div class="absolute inset-0 bg-gradient-to-tr from-indigo-600/30 to-transparent z-0"></div>
+
+        <div class="relative z-10 max-w-md">
+            <div class="inline-flex p-3 rounded-2xl bg-white/10 backdrop-blur-md text-white mb-6 border border-white/10 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a44.503 44.503 0 00-2.285-.907m17.767.907a44.507 44.507 0 012.285-.907m-2.285.907L12 14l-7.732-3.76M12 3v17m-.405-16.554a.75.75 0 01.81 0l7.75 5.25a.75.75 0 010 1.248l-7.75 5.25a.75.75 0 01-.81 0l-7.75-5.25a.75.75 0 010-1.248l7.75-5.25z" />
+                </svg>
+            </div>
+            <h2 class="text-4xl font-extrabold text-white tracking-tight leading-tight">Welcome to the future of center management.</h2>
+            <p class="mt-4 text-lg text-slate-300 leading-relaxed">Streamline your courses, manage student tracks, and optimize administrative workflows effortlessly.</p>
         </div>
 
-        <!-- Validation Summary -->
-        <div asp-validation-summary="All" class="text-error text-body-sm mb-4"></div>
-
-        <form asp-action="Login" asp-controller="Auth" method="post" class="space-y-5">
-            @Html.AntiForgeryToken()
-
-            <!-- Email -->
-            <div>
-                <label asp-for="Email" class="block font-label-md text-label-md text-on-surface mb-1.5">Email</label>
-                <input asp-for="Email"
-                       type="email"
-                       placeholder="admin@center.com"
-                       class="w-full px-4 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest text-on-surface font-body-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" />
-                <span asp-validation-for="Email" class="text-error text-label-sm mt-1 block"></span>
-            </div>
-
-            <!-- Password -->
-            <div>
-                <label asp-for="Password" class="block font-label-md text-label-md text-on-surface mb-1.5">Password</label>
-                <input asp-for="Password"
-                       type="password"
-                       placeholder="••••••••"
-                       class="w-full px-4 py-3 border border-outline-variant rounded-lg bg-surface-container-lowest text-on-surface font-body-sm focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" />
-                <span asp-validation-for="Password" class="text-error text-label-sm mt-1 block"></span>
-            </div>
-
-            <!-- Remember Me -->
-            <div class="flex items-center gap-2">
-                <input asp-for="RememberMe"
-                       type="checkbox"
-                       class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary" />
-                <label asp-for="RememberMe" class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer">Remember me</label>
-            </div>
-
-            <!-- Submit -->
-            <button type="submit"
-                    class="bg-primary-container text-white w-full py-3.5 rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-[0.98] transition-all shadow-md">
-                Sign In
-            </button>
-        </form>
+        <div class="absolute bottom-6 left-12 text-sm text-slate-400">
+            &copy; 2026 EduManager Pro. All rights reserved.
+        </div>
     </div>
+
+    <div class="w-full lg:w-1/2 flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-20 bg-gradient-to-b from-slate-900 via-slate-850 to-slate-900 lg:from-slate-50 lg:via-slate-100 lg:to-slate-50">
+
+        <div class="mx-auto w-full max-w-sm bg-slate-900/40 lg:bg-white/60 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-slate-700/50 lg:border-slate-200/60 transition-all duration-300">
+
+            <div class="lg:hidden text-center mb-6">
+                <span class="inline-flex p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-bold mb-2">EduManager Pro</span>
+            </div>
+
+            <div class="mb-8 text-center lg:text-left">
+                <h1 class="text-3xl font-extrabold text-white lg:text-slate-900 tracking-tight">Sign In</h1>
+                <p class="text-sm text-slate-400 lg:text-slate-500 mt-2 font-medium">Please enter your credentials to access your account.</p>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="All" class="p-3.5 mb-5 rounded-xl bg-red-500/10 text-red-400 lg:bg-red-50 lg:text-red-600 text-sm font-medium border border-red-500/20 lg:border-red-100 list-none"></div>
+            }
+
+            <form asp-action="Login" asp-controller="Auth" method="post" class="space-y-5">
+                @Html.AntiForgeryToken()
+
+                <div>
+                    <label asp-for="Email" class="block text-sm font-semibold text-slate-300 lg:text-slate-700 mb-1.5">Email Address</label>
+                    <input asp-for="Email"
+                           type="email"
+                           autocomplete="email"
+                           placeholder="name@example.com"
+                           class="w-full px-4 py-3 border border-slate-700 lg:border-slate-200 rounded-xl bg-slate-950/40 lg:bg-white text-white lg:text-slate-900 text-sm transition-all duration-200 outline-none focus:ring-2 focus:ring-indigo-500/30 lg:focus:ring-indigo-500/20 focus:border-indigo-400 lg:focus:border-indigo-500 placeholder:text-slate-500 lg:placeholder:text-slate-400" />
+                    <span asp-validation-for="Email" class="text-red-400 lg:text-red-500 text-xs mt-1.5 block"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Password" class="block text-sm font-semibold text-slate-300 lg:text-slate-700 mb-1.5">Password</label>
+                    <input asp-for="Password"
+                           type="password"
+                           autocomplete="current-password"
+                           placeholder="••••••••"
+                           class="w-full px-4 py-3 border border-slate-700 lg:border-slate-200 rounded-xl bg-slate-950/40 lg:bg-white text-white lg:text-slate-900 text-sm transition-all duration-200 outline-none focus:ring-2 focus:ring-indigo-500/30 lg:focus:ring-indigo-500/20 focus:border-indigo-400 lg:focus:border-indigo-500 placeholder:text-slate-500 lg:placeholder:text-slate-400" />
+                    <span asp-validation-for="Password" class="text-red-400 lg:text-red-500 text-xs mt-1.5 block"></span>
+                </div>
+
+                <div class="flex items-center gap-2.5 pt-1">
+                    <input asp-for="RememberMe"
+                           type="checkbox"
+                           class="w-4 h-4 rounded border-slate-600 lg:border-slate-300 bg-slate-950/50 lg:bg-white text-indigo-600 focus:ring-indigo-500/30 cursor-pointer accent-indigo-600" />
+                    <label asp-for="RememberMe" class="text-sm text-slate-300 lg:text-slate-600 cursor-pointer select-none hover:text-white lg:hover:text-slate-900 transition-colors font-medium">Keep me signed in</label>
+                </div>
+
+                <button type="submit"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-3.5 rounded-xl text-sm font-bold shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/30 active:scale-[0.99] transition-all duration-150 mt-2 focus:ring-2 focus:ring-indigo-500/40 focus:outline-none">
+                    Sign In to Dashboard
+                </button>
+            </form>
+
+        </div>
+    </div>
+
 </div>
 
 @section Scripts {
