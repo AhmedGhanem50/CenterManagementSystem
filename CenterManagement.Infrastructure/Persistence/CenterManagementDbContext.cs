@@ -2,11 +2,11 @@ using CenterManagement.Domain.Common;
 using CenterManagement.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+using System.Linq.Expressions;   
 
 namespace CenterManagement.Infrastructure.Persistence
 {
-    public class CenterManagementDbContext
+    public class CenterManagementDbContext 
         : IdentityDbContext<ApplicationUser>
     {
         public CenterManagementDbContext(

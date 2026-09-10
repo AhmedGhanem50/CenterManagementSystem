@@ -7,7 +7,7 @@ using CenterManagement.Application.Interfaces;
 using CenterManagement.Domain.Entities;
 using CenterManagement.Infrastructure.Persistence;
 
-namespace CenterManagement.Application.Services;
+namespace CenterManagement.Application.Services;  
 
 public class AttendanceService : IAttendanceService
 {

@@ -26,7 +26,7 @@ D:\ITI\BACKEND\MVC\Project\CenterManagementSystem
 |   +---DependencyInjection
 |   |       ApplicationServiceRegistration.cs
 |   |       
-|   +---DTOs
+|   +---DTOs       
 |   |   +---Analytics
 |   |   |       AnalyticsKpiDto.cs
 |   |   |       AttendanceTrendPointDto.cs
