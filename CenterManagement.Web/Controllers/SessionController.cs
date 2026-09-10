@@ -160,10 +160,53 @@ namespace CenterManagement.Web.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+        // POST: /Session/Uncancel/{id}
+        [HttpPost]
+        public async Task<IActionResult> Uncancel(int id)
+        {
+            try
+            {
+                await _sessionService.UncancelSessionAsync(id, GetUserId());
+                return Json(new { success = true, message = "Session uncanceled successfully." });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Json(new { success = false, message = "You do not own this session's group." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST: /Session/AssignSubstitute/{id}
+        [HttpPost]
+        public async Task<IActionResult> AssignSubstitute(int id, [FromBody] AssignSubstituteRequest request)
+        {
+            try
+            {
+                await _sessionService.AssignSubstituteAsync(id, request.SubstituteProfileId, GetUserId());
+                return Json(new { success = true, message = "Substitute instructor assigned." });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Json(new { success = false, message = "You do not own this session's group." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 
     public class CancelSessionRequest
     {
         public string CancelReason { get; set; } = string.Empty;
+    }
+
+    public class AssignSubstituteRequest
+    {
+        public int SubstituteProfileId { get; set; }
     }
 }

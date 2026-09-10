@@ -1,4 +1,4 @@
-﻿using CenterManagement.Domain.Common;
+using CenterManagement.Domain.Common;
 using CenterManagement.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +64,12 @@ namespace CenterManagement.Infrastructure.Persistence
         // =========================================
 
         public DbSet<Notification> Notifications { get; set; }
+
+        // =========================================
+        // Settings
+        // =========================================
+
+        public DbSet<SystemSetting> SystemSettings { get; set; }
 
         // =========================================
         // Audit
@@ -232,6 +238,16 @@ namespace CenterManagement.Infrastructure.Persistence
                 .HasOne(x => x.Group)
                 .WithMany(x => x.Sessions)
                 .HasForeignKey(x => x.GroupId);
+
+            // =========================================
+            // Substitute Instructor -> Sessions
+            // =========================================
+
+            builder.Entity<Session>()
+                .HasOne(x => x.SubstituteInstructor)
+                .WithMany()
+                .HasForeignKey(x => x.SubstituteInstructorProfileId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // =========================================
             // Student -> Enrollments

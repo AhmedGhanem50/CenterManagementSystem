@@ -1,4 +1,4 @@
-﻿using CenterManagement.Domain.Common;
+using CenterManagement.Domain.Common;
 
 namespace CenterManagement.Domain.Entities
 {
@@ -17,5 +17,9 @@ namespace CenterManagement.Domain.Entities
         public bool IsPresent { get; set; }
 
         public bool IsLate { get; set; }
+
+        // Duplicate Scans & Rejections (GAP-010, GAP-011)
+        public int DuplicateScanCount { get; set; } = 0;
+        public bool IsRejected { get; set; } = false;
     }
 }

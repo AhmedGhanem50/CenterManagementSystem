@@ -10,5 +10,6 @@ namespace CenterManagement.Application.Interfaces
         Task<List<NotificationDto>> GetNotificationsAsync(string userId, int page, int pageSize);
         Task MarkReadAsync(int notificationId, string userId);
         Task MarkAllReadAsync(string userId);
+        Task RetryFailedNotificationsAsync();
     }
 }

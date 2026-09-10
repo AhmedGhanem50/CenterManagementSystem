@@ -141,6 +141,25 @@ namespace CenterManagement.Web.Controllers
         }
 
         // =========================================
+        // POST /Payment/VoidTransaction
+        // =========================================
+
+        [HttpPost]
+        public async Task<IActionResult> VoidTransaction(int transactionId, [FromBody] VoidTransactionRequest request)
+        {
+            try
+            {
+                var adminId = GetAdminId();
+                await _paymentService.VoidTransactionAsync(transactionId, request.Reason, adminId);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        // =========================================
         // GET /Payment/StudentSummary/{id}
         // =========================================
 
@@ -187,5 +206,10 @@ namespace CenterManagement.Web.Controllers
     {
         public int StudentProfileId { get; set; }
         public int CourseId { get; set; }
+    }
+
+    public class VoidTransactionRequest
+    {
+        public string Reason { get; set; } = string.Empty;
     }
 }

@@ -18,6 +18,12 @@ public class AttendanceController : Controller
         _qrService = qrService;
     }
 
+    [HttpGet]
+    public IActionResult OfflineScan()
+    {
+        return View();
+    }
+
     [HttpPost]
     public async Task<IActionResult> Scan([FromBody] ScanRequest req)
     {
@@ -25,6 +31,25 @@ public class AttendanceController : Controller
         {
             var result = await _attendanceService.ProcessScanAsync(req.QrCode, DateTime.Now);
             return Json(result);
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, errorMessage = ex.Message });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> BatchSync([FromBody] List<OfflineScanDto> scans)
+    {
+        try
+        {
+            var results = new List<ScanResultDto>();
+            foreach (var scan in scans)
+            {
+                var result = await _attendanceService.ProcessScanAsync(scan.QrCode, scan.ScanTime);
+                results.Add(result);
+            }
+            return Json(new { success = true, results });
         }
         catch (Exception ex)
         {
@@ -106,3 +131,9 @@ public class AttendanceController : Controller
 }
 
 public record ScanRequest(string QrCode);
+
+public class OfflineScanDto
+{
+    public string QrCode { get; set; } = string.Empty;
+    public DateTime ScanTime { get; set; }
+}

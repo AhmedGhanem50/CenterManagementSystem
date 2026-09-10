@@ -101,10 +101,11 @@
                 "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
               }
             }
-          }
         }
     </script>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="manifest" href="~/manifest.json" />
+    <meta name="theme-color" content="#004ac6">
 </head>
 <body class="bg-background text-on-background font-body-md overflow-x-hidden">
 
@@ -330,6 +331,17 @@
 
     // Initial poll on page load
     document.addEventListener('DOMContentLoaded', pollNotifications);
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
 </script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>

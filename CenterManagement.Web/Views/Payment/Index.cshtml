@@ -143,6 +143,7 @@
                     <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider text-right">Amount</th>
                     <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Method</th>
                     <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider text-right">Actions</th>
                 </tr>
             </thead>
             <tbody id="tx-tbody" class="divide-y divide-outline-variant">
@@ -349,6 +350,9 @@
                     </td>
                     <td class="px-6 py-4">
                         <span class="${t.isPaid ? 'badge-green' : 'badge-orange'}">${t.isPaid ? 'Paid' : 'Pending'}</span>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        ${t.isPaid ? `<button onclick="voidTransaction(${t.transactionId})" class="text-error font-label-sm text-label-sm hover:underline">Void</button>` : ''}
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -587,6 +591,35 @@
             } catch (e) {
                 errorEl.textContent = 'An error occurred while processing the payment.';
                 errorEl.classList.remove('hidden');
+                console.error(e);
+            }
+        }
+
+        async function voidTransaction(transactionId) {
+            const reason = prompt('Please enter a reason for voiding this transaction:');
+            if (!reason) return;
+
+            if (!confirm('Are you sure you want to void this transaction? This action is irreversible.')) return;
+
+            try {
+                const res = await fetch(`/Payment/VoidTransaction?transactionId=${transactionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': getAntiForgeryToken()
+                    },
+                    body: JSON.stringify({ reason: reason })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    loadKpis();
+                    fetchTransactions(currentPage);
+                } else {
+                    alert('Error voiding transaction: ' + data.error);
+                }
+            } catch (e) {
+                alert('An error occurred.');
                 console.error(e);
             }
         }

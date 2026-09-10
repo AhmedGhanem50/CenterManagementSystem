@@ -15,17 +15,20 @@ public class AttendanceService : IAttendanceService
     private readonly IQrService _qrService;
     private readonly IAuditLogService _auditLogService;
     private readonly IConfiguration _config;
+    private readonly INotificationService _notificationService;
 
     public AttendanceService(
         CenterManagementDbContext db,
         IQrService qrService,
         IAuditLogService auditLogService,
-        IConfiguration config)
+        IConfiguration config,
+        INotificationService notificationService)
     {
         _db = db;
         _qrService = qrService;
         _auditLogService = auditLogService;
         _config = config;
+        _notificationService = notificationService;
     }
 
     public async Task<Session?> GetSessionForStudentAtTimeAsync(int studentProfileId, DateTime scanTime)
@@ -65,7 +68,7 @@ public class AttendanceService : IAttendanceService
         return await _db.Sessions
             .Include(s => s.Group)
             .Where(s =>
-                s.Group.InstructorProfileId == instructorProfileId &&
+                (s.Group.InstructorProfileId == instructorProfileId || s.SubstituteInstructorProfileId == instructorProfileId) &&
                 !s.IsDeleted &&
                 !s.IsCanceled &&
                 s.SessionDate.Date == scanDate &&
@@ -108,12 +111,36 @@ public class AttendanceService : IAttendanceService
                     return new ScanResultDto { Success = false, ErrorMessage = "No active session found at this time" };
                 }
 
+                // GAP-011: 50% Late Rejection
+                var sessionDuration = session.EndTime - session.StartTime;
+                var halfwayPoint = session.StartTime.Add(TimeSpan.FromTicks(sessionDuration.Ticks / 2));
+                var isRejected = scanTime.TimeOfDay > halfwayPoint;
+                if (isRejected)
+                {
+                    await WriteQrCodeLogAsync(qrCode, scanTime, userId);
+                    return new ScanResultDto 
+                    { 
+                        Success = false, 
+                        ErrorMessage = "Scan rejected: more than 50% of the session has elapsed."
+                    };
+                }
+
                 var existingAttendance = await _db.StudentAttendances
                     .FirstOrDefaultAsync(a => a.StudentProfileId == studentProfile.Id && a.SessionId == session.Id);
 
                 if (existingAttendance != null)
                 {
+                    // GAP-010: Duplicate Scan Tracking
+                    existingAttendance.DuplicateScanCount++;
+                    await _db.SaveChangesAsync(); // Save count
+
                     await WriteQrCodeLogAsync(qrCode, scanTime, userId);
+
+                    if (existingAttendance.DuplicateScanCount >= 3)
+                    {
+                        return new ScanResultDto { Success = false, ErrorMessage = "Warning: Multiple scan attempts detected." };
+                    }
+                    
                     return new ScanResultDto { Success = true, ErrorMessage = "Already scanned", IsLate = existingAttendance.IsLate };
                 }
 
@@ -126,6 +153,7 @@ public class AttendanceService : IAttendanceService
                     SessionId = session.Id,
                     IsPresent = true,
                     IsLate = isLate,
+                    IsRejected = false,
                     ScanTime = scanTime
                 };
 
@@ -135,6 +163,25 @@ public class AttendanceService : IAttendanceService
                 {
                     await _db.SaveChangesAsync();
                     attendanceId = attendance.Id;
+
+                    // GAP-003: Unpaid Student Notification
+                    var unpaidPayment = await _db.StudentCoursePayments
+                        .Where(p => p.StudentProfileId == studentProfile.Id && p.CourseId == session.Group.CourseId && !p.IsPaid && !p.IsDeleted)
+                        .FirstOrDefaultAsync();
+
+                    if (unpaidPayment != null)
+                    {
+                        var admins = await _db.UserRoles
+                            .Where(ur => ur.RoleId == _db.Roles.FirstOrDefault(r => r.Name == "Admin")!.Id)
+                            .Select(ur => ur.UserId)
+                            .ToListAsync();
+
+                        foreach (var aId in admins)
+                        {
+                            await _notificationService.SendToUserAsync(aId, "Unpaid Student Attended", 
+                                $"Student {studentProfile.User.FullName} attended session {session.Id} but has an outstanding balance of {unpaidPayment.RemainingAmount:C}.");
+                        }
+                    }
                 }
                 catch (DbUpdateException ex) when (ex.InnerException?.Message.Contains("UNIQUE") == true || ex.InnerException?.Message.Contains("duplicate") == true)
                 {
@@ -203,6 +250,23 @@ public class AttendanceService : IAttendanceService
                 studentImagePath = studentUser?.ImagePath;
             }
 
+            // GAP-003: Unpaid Student Notification (Frontend Data)
+            bool hasUnpaid = false;
+            decimal unpaidAmount = 0m;
+            
+            if (studentProfile != null && session?.Group?.CourseId != null)
+            {
+                var unpaidPayment = await _db.StudentCoursePayments
+                    .Where(p => p.StudentProfileId == studentProfile.Id && p.CourseId == session.Group.CourseId && !p.IsPaid && !p.IsDeleted)
+                    .FirstOrDefaultAsync();
+                    
+                if (unpaidPayment != null)
+                {
+                    hasUnpaid = true;
+                    unpaidAmount = unpaidPayment.RemainingAmount;
+                }
+            }
+
             return new ScanResultDto
             {
                 Success = true,
@@ -214,7 +278,9 @@ public class AttendanceService : IAttendanceService
                 GradeLevelName = session?.Group?.Course?.GradeLevel?.Name,
                 IsLate = isLate,
                 ScanTime = scanTime,
-                AttendanceId = attendanceId
+                AttendanceId = attendanceId,
+                HasUnpaidBalance = hasUnpaid,
+                UnpaidAmount = unpaidAmount
             };
         }
         catch (Exception ex)

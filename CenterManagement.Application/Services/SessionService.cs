@@ -41,7 +41,7 @@ namespace CenterManagement.Application.Services
             if (dto.StartTime >= dto.EndTime)
                 throw new InvalidOperationException("Start time must be before end time");
 
-            // 3. Overlap check
+            // 3. Overlap check (Group Level)
             var overlap = await _db.Sessions
                 .Where(s =>
                     s.GroupId == dto.GroupId &&
@@ -59,6 +59,27 @@ namespace CenterManagement.Application.Services
             if (overlap)
                 throw new InvalidOperationException(
                     "An overlapping session already exists for this group on that date.");
+
+            // 3.1 Overlap check (Instructor Level - GAP-006)
+            var group = await _db.Groups.FindAsync(dto.GroupId);
+            if (group != null)
+            {
+                var instructorOverlap = await _db.Sessions
+                    .Include(s => s.Group)
+                    .Where(s => s.Group.InstructorProfileId == group.InstructorProfileId
+                        && s.SessionDate.Date == dto.SessionDate.Date
+                        && !s.IsCanceled && !s.IsDeleted
+                        && (
+                            (dto.StartTime >= s.StartTime && dto.StartTime < s.EndTime) ||
+                            (dto.EndTime > s.StartTime && dto.EndTime <= s.EndTime) ||
+                            (dto.StartTime <= s.StartTime && dto.EndTime >= s.EndTime)
+                        ))
+                    .AnyAsync();
+
+                if (instructorOverlap)
+                    throw new InvalidOperationException(
+                        "The instructor already has a session scheduled at this time.");
+            }
 
             var session = new Session
             {
@@ -93,6 +114,7 @@ namespace CenterManagement.Application.Services
                 .Include(s => s.Group).ThenInclude(g => g.Course).ThenInclude(c => c.Subject)
                 .Include(s => s.Group).ThenInclude(g => g.Course).ThenInclude(c => c.GradeLevel)
                 .Include(s => s.Group).ThenInclude(g => g.InstructorProfile).ThenInclude(ip => ip.User)
+                .Include(s => s.SubstituteInstructor).ThenInclude(si => si.User)
                 .Include(s => s.Group).ThenInclude(g => g.Enrollments)
                 .Include(s => s.Attendances)
                 .AsNoTracking()
@@ -111,6 +133,7 @@ namespace CenterManagement.Application.Services
                 SubjectName = session.Group.Course.Subject.Name,
                 GradeLevelName = session.Group.Course.GradeLevel.Name,
                 InstructorName = session.Group.InstructorProfile?.User?.FullName ?? "N/A",
+                SubstituteInstructorName = session.SubstituteInstructor?.User?.FullName,
                 IsCanceled = session.IsCanceled,
                 CancelReason = session.CancelReason,
                 AttendanceCount = session.Attendances.Count(a => a.IsPresent),
@@ -216,18 +239,13 @@ namespace CenterManagement.Application.Services
             // 4. Set canceled
             session.IsCanceled = true;
             session.CancelReason = cancelReason;
+            session.CanceledAt = DateTime.UtcNow; // GAP-009: 5-minute grace period
             session.UpdatedAt = DateTime.UtcNow;
 
             // 5. Save
             await _db.SaveChangesAsync();
 
-            // 6. Send notification to group
-            await _notificationService.SendToGroupAsync(
-                session.GroupId,
-                "Session Canceled",
-                $"The session on {session.SessionDate:d} has been canceled. Reason: {cancelReason}");
-
-            // 7. Write audit
+            // 6. Write audit
             await _audit.LogAsync(
                 performedByUserId,
                 "SessionCanceled",
@@ -235,6 +253,71 @@ namespace CenterManagement.Application.Services
                 sessionId,
                 null,
                 JsonSerializer.Serialize(new { cancelReason }));
+                
+            // Note: Notification sending is deferred for 5 minutes by background processor (GAP-009)
+        }
+
+        // =========================================
+        // UncancelSessionAsync (GAP-009)
+        // =========================================
+
+        public async Task UncancelSessionAsync(int sessionId, string adminId)
+        {
+            var session = await _db.Sessions
+                .FirstOrDefaultAsync(s => s.Id == sessionId)
+                ?? throw new KeyNotFoundException($"Session {sessionId} not found.");
+
+            if (!session.IsCanceled)
+                throw new InvalidOperationException("Session is not canceled.");
+
+            if (session.CanceledAt == null || (DateTime.UtcNow - session.CanceledAt.Value).TotalMinutes > 5)
+            {
+                throw new InvalidOperationException("Cancellation grace period (5 minutes) has expired.");
+            }
+
+            session.IsCanceled = false;
+            session.CancelReason = null;
+            session.CanceledAt = null;
+            session.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+
+            await _audit.LogAsync(
+                adminId,
+                "SessionUncanceled",
+                "Session",
+                sessionId,
+                null,
+                null);
+        }
+
+        // =========================================
+        // AssignSubstituteAsync (GAP-007)
+        // =========================================
+
+        public async Task AssignSubstituteAsync(int sessionId, int substituteInstructorProfileId, string adminId)
+        {
+            var session = await _db.Sessions
+                .FirstOrDefaultAsync(s => s.Id == sessionId)
+                ?? throw new KeyNotFoundException($"Session {sessionId} not found.");
+
+            session.SubstituteInstructorProfileId = substituteInstructorProfileId;
+            session.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+
+            await _notificationService.SendToGroupAsync(
+                session.GroupId,
+                "Instructor Changed",
+                $"A substitute instructor has been assigned for the session on {session.SessionDate:d}.");
+
+            await _audit.LogAsync(
+                adminId,
+                "SubstituteAssigned",
+                "Session",
+                sessionId,
+                null,
+                JsonSerializer.Serialize(new { SubstituteInstructorProfileId = substituteInstructorProfileId }));
         }
 
         // =========================================

@@ -13,4 +13,8 @@ public class ScanResultDto
     public bool IsLate { get; set; }
     public DateTime? ScanTime { get; set; }
     public int? AttendanceId { get; set; }
+    
+    // GAP-003: Unpaid Notification
+    public bool HasUnpaidBalance { get; set; }
+    public decimal UnpaidAmount { get; set; }
 }

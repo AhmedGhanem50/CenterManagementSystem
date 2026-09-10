@@ -10,6 +10,8 @@ namespace CenterManagement.Application.Interfaces
         Task<List<SessionListItemDto>> GetSessionsByDateAsync(DateTime date);
         Task<List<SessionListItemDto>> GetSessionsByDateRangeAsync(DateTime from, DateTime to);
         Task CancelSessionAsync(int sessionId, string cancelReason, string performedByUserId);
+        Task UncancelSessionAsync(int sessionId, string adminId);
+        Task AssignSubstituteAsync(int sessionId, int substituteInstructorProfileId, string adminId);
         Task<int?> GetInstructorProfileIdByUserIdAsync(string userId);
     }
 }

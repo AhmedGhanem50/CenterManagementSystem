@@ -1,0 +1,221 @@
+@model CenterManagement.Application.DTOs.Student.StudentProfileDto
+
+@{
+    Layout = null; // We don't want the regular layout for a printable card
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.FullName - Student ID Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .id-card {
+            width: 320px;
+            height: 500px;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #e5e7eb;
+        }
+
+        .id-card-header {
+            background-color: #004ac6;
+            color: white;
+            padding: 24px 20px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .id-card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-color: #ffffff;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+
+        .center-logo {
+            max-height: 50px;
+            max-width: 200px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .center-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .id-card-body {
+            padding: 0 24px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .student-photo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: -60px auto 16px;
+            background-color: #f3f4f6;
+            position: relative;
+        }
+
+        .student-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0 0 4px;
+            line-height: 1.2;
+        }
+
+        .student-grade {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+            margin: 0 0 16px;
+        }
+
+        .qr-code-container {
+            background-color: white;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .qr-code-img {
+            width: 140px;
+            height: 140px;
+        }
+
+        .id-number {
+            font-size: 12px;
+            color: #9ca3af;
+            font-family: monospace;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .id-card-footer {
+            background-color: #f9fafb;
+            padding: 12px;
+            text-align: center;
+            font-size: 11px;
+            color: #9ca3af;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                margin: 0;
+                padding: 0;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+
+            .id-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+
+            @page {
+                size: auto;
+                margin: 0mm;
+            }
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #004ac6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        
+        .print-btn:hover {
+            background-color: #003699;
+            transform: translateY(-1px);
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">Print Card</button>
+
+    <div class="id-card">
+        <div class="id-card-header">
+            @if (!string.IsNullOrEmpty(ViewBag.CenterLogoUrl))
+            {
+                <img src="@ViewBag.CenterLogoUrl" alt="Center Logo" class="center-logo" onerror="this.style.display='none'" />
+            }
+            <h1 class="center-title">STUDENT ID CARD</h1>
+        </div>
+
+        <div class="id-card-body">
+            <img src="@(Model.ImagePath != null ? $"/{Model.ImagePath}" : "/images/avatar-default.png")" alt="@Model.FullName" class="student-photo" />
+            
+            <h2 class="student-name">@Model.FullName</h2>
+            <p class="student-grade">@Model.GradeLevelName</p>
+
+            <div class="qr-code-container">
+                <img src="/Attendance/GetQr/@Model.UserId" alt="QR Code" class="qr-code-img" />
+            </div>
+            
+            <p class="id-number">ID: @Model.UserId.Substring(0, 8).ToUpper()</p>
+        </div>
+
+        <div class="id-card-footer">
+            Property of Center Management System<br>
+            Please return if found
+        </div>
+    </div>
+</body>
+</html>

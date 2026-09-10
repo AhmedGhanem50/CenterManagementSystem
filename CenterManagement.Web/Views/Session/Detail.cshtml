@@ -48,8 +48,17 @@
                 <div class="flex gap-3">
                     @if (Model.CanCancel && !s.IsCanceled && !isPast)
                     {
+                        <button onclick="openSubstituteModal()" class="px-4 py-2 bg-surface-container-low text-on-surface rounded-lg font-label-md text-label-md hover:bg-surface-container-high transition-all active:scale-95 shadow-sm border border-outline-variant">
+                            Assign Substitute
+                        </button>
                         <button onclick="openCancelModal()" class="px-4 py-2 bg-error text-on-error rounded-lg font-label-md text-label-md hover:opacity-90 transition-all active:scale-95 shadow-md">
                             Cancel Session
+                        </button>
+                    }
+                    @if (Model.CanCancel && s.IsCanceled && !isPast)
+                    {
+                        <button onclick="uncancelSession()" class="px-4 py-2 bg-green-600 text-white rounded-lg font-label-md text-label-md hover:opacity-90 transition-all active:scale-95 shadow-md">
+                            Uncancel Session
                         </button>
                     }
                 </div>
@@ -185,6 +194,29 @@
             </div>
         </div>
     </div>
+
+    <!-- Substitute Instructor Modal -->
+    <div id="substituteModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100]">
+        <div class="bg-surface-container-lowest rounded-xl shadow-xl border border-outline-variant w-full max-w-md mx-4 overflow-hidden transform transition-all">
+            <div class="p-6 border-b border-outline-variant flex justify-between items-center bg-surface">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Assign Substitute</h3>
+                <button type="button" onclick="closeSubstituteModal()" class="text-outline hover:text-on-surface-variant transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-body-sm text-on-surface-variant">Assign a substitute instructor for this session.</p>
+                <div class="space-y-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1">Substitute Profile ID</label>
+                    <input type="number" id="substituteProfileId" class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface text-body-md focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all outline-none" placeholder="Enter Instructor Profile ID" />
+                </div>
+            </div>
+            <div class="p-6 bg-surface border-t border-outline-variant flex justify-end gap-3">
+                <button type="button" onclick="closeSubstituteModal()" class="px-5 py-2.5 rounded-lg border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-low transition-colors">Cancel</button>
+                <button type="button" onclick="submitSubstitute()" class="px-5 py-2.5 rounded-lg bg-primary text-white font-label-md shadow-md hover:opacity-90 transition-all">Assign Substitute</button>
+            </div>
+        </div>
+    </div>
 }
 
 @section Scripts {
@@ -225,6 +257,55 @@
                     }
                 } catch (err) {
                     alert('Failed to cancel session.');
+                }
+            }
+
+            async function uncancelSession() {
+                if (!confirm('Are you sure you want to uncancel this session?')) return;
+                try {
+                    const response = await fetch('/Session/Uncancel/@s.SessionId', {
+                        method: 'POST'
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (err) {
+                    alert('Failed to uncancel session.');
+                }
+            }
+
+            function openSubstituteModal() {
+                document.getElementById('substituteModal').classList.remove('hidden');
+                document.getElementById('substituteProfileId').value = '';
+            }
+
+            function closeSubstituteModal() {
+                document.getElementById('substituteModal').classList.add('hidden');
+            }
+
+            async function submitSubstitute() {
+                const subId = document.getElementById('substituteProfileId').value;
+                if (!subId) {
+                    alert('Please enter a Substitute Profile ID.');
+                    return;
+                }
+                try {
+                    const response = await fetch('/Session/AssignSubstitute/@s.SessionId', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ substituteProfileId: parseInt(subId) })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (err) {
+                    alert('Failed to assign substitute.');
                 }
             }
             </text>

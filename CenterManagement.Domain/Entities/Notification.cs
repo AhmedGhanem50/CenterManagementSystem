@@ -1,4 +1,4 @@
-﻿using CenterManagement.Domain.Common;
+using CenterManagement.Domain.Common;
 
 namespace CenterManagement.Domain.Entities
 {
@@ -16,5 +16,11 @@ namespace CenterManagement.Domain.Entities
 
         public DateTime SentAt { get; set; }
             = DateTime.UtcNow;
+
+        // Retry Queue (GAP-012)
+        public bool IsSent { get; set; } = true;
+        public int RetryCount { get; set; } = 0;
+        public string? FailureReason { get; set; }
+        public DateTime? NextRetryAt { get; set; }
     }
 }

@@ -15,7 +15,7 @@
 </div>
 
 <!-- KPI Cards Row -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
     <!-- Total Students -->
     <div class="bg-white border border-outline-variant p-6 rounded-xl card-shadow hover:shadow-lg transition-shadow">
         <div class="flex items-center justify-between mb-3">
@@ -64,6 +64,18 @@
         <p class="text-body-sm text-on-surface-variant">Revenue Today</p>
         <p id="kpi-revenue-today" class="text-headline-md font-headline-md text-on-surface mt-1">—</p>
         <p class="text-label-sm text-amber-600 mt-2">EGP collected today</p>
+    </div>
+
+    <!-- Failed Notifications -->
+    <div class="bg-white border border-outline-variant p-6 rounded-xl card-shadow hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <div class="p-3 bg-error-container rounded-lg">
+                <span class="material-symbols-outlined text-error">notification_important</span>
+            </div>
+        </div>
+        <p class="text-body-sm text-on-surface-variant">Failed Notifications</p>
+        <p id="kpi-failed-notifications" class="text-headline-md font-headline-md text-error mt-1">—</p>
+        <p class="text-label-sm text-error mt-2">in retry queue</p>
     </div>
 </div>
 
@@ -138,6 +150,7 @@
             document.getElementById('kpi-attendance-rate').textContent = d.attendanceRateLast7Days.toFixed(1) + '%';
             document.getElementById('kpi-revenue-today').textContent = d.revenueTodayAmount.toFixed(2);
             document.getElementById('kpi-new-students').textContent = '+' + d.newStudentsThisMonth;
+            document.getElementById('kpi-failed-notifications').textContent = d.failedNotificationCount;
         } catch (e) {
             console.error('Failed to load KPIs:', e);
         }

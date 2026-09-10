@@ -379,6 +379,7 @@ namespace CenterManagement.Application.Services
         {
             // 1. Find active enrollment in fromGroup
             var enrollment = await _db.Enrollments
+                .Include(e => e.Group)
                 .FirstOrDefaultAsync(e =>
                     e.StudentProfileId == studentProfileId &&
                     e.GroupId == fromGroupId &&
@@ -386,7 +387,9 @@ namespace CenterManagement.Application.Services
                 ?? throw new InvalidOperationException(
                     $"No active enrollment found for student {studentProfileId} in group {fromGroupId}.");
 
-            var targetGroup = await _db.Groups.FirstOrDefaultAsync(g => g.Id == toGroupId);
+            var targetGroup = await _db.Groups
+                .Include(g => g.Course)
+                .FirstOrDefaultAsync(g => g.Id == toGroupId);
             if (targetGroup == null) throw new InvalidOperationException("Target group not found or is deleted.");
             if (!targetGroup.IsActive) throw new InvalidOperationException("Target group is inactive.");
 
@@ -401,6 +404,43 @@ namespace CenterManagement.Application.Services
             {
                 throw new InvalidOperationException(
                     $"Student {studentProfileId} already has an active enrollment in group {toGroupId}.");
+            }
+
+            // GAP-004: Financial Reconciliation
+            var oldCourseId = enrollment.Group.CourseId;
+            var newCourseId = targetGroup.CourseId;
+            if (oldCourseId != newCourseId)
+            {
+                var oldPayment = await _db.StudentCoursePayments
+                    .FirstOrDefaultAsync(p => p.StudentProfileId == studentProfileId && p.CourseId == oldCourseId && !p.IsDeleted);
+
+                if (oldPayment != null)
+                {
+                    // Check if payment already exists for the new course
+                    var newPayment = await _db.StudentCoursePayments
+                        .FirstOrDefaultAsync(p => p.StudentProfileId == studentProfileId && p.CourseId == newCourseId && !p.IsDeleted);
+
+                    if (newPayment == null)
+                    {
+                        var newPrice = targetGroup.Course.Price;
+                        var paidAmount = oldPayment.PaidAmount;
+                        
+                        _db.StudentCoursePayments.Add(new StudentCoursePayment
+                        {
+                            StudentProfileId = studentProfileId,
+                            CourseId = newCourseId,
+                            RequiredAmount = newPrice,
+                            PaidAmount = paidAmount,
+                            RemainingAmount = Math.Max(0, newPrice - paidAmount),
+                            IsPaid = paidAmount >= newPrice,
+                            CreatedAt = DateTime.UtcNow
+                        });
+                        
+                        // We logically delete the old payment so it no longer applies to the student's balance, but it stays in history
+                        oldPayment.IsDeleted = true;
+                        oldPayment.UpdatedAt = DateTime.UtcNow;
+                    }
+                }
             }
 
             // 3. Deactivate old enrollment

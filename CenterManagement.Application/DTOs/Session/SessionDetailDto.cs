@@ -11,6 +11,7 @@ namespace CenterManagement.Application.DTOs.Session
         public string SubjectName { get; set; } = string.Empty;
         public string GradeLevelName { get; set; } = string.Empty;
         public string InstructorName { get; set; } = string.Empty;
+        public string? SubstituteInstructorName { get; set; }
         public bool IsCanceled { get; set; }
         public string? CancelReason { get; set; }
         public int AttendanceCount { get; set; }

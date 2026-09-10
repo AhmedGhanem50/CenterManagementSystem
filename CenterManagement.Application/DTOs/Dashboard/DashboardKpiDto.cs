@@ -7,5 +7,6 @@ namespace CenterManagement.Application.DTOs.Dashboard
         public decimal AttendanceRateLast7Days { get; set; }
         public decimal RevenueTodayAmount { get; set; }
         public int NewStudentsThisMonth { get; set; }
+        public int FailedNotificationCount { get; set; }
     }
 }

@@ -136,6 +136,48 @@ namespace CenterManagement.Application.Services
         }
 
         // =========================================
+        // VoidTransactionAsync (GAP-005)
+        // =========================================
+
+        public async Task VoidTransactionAsync(int transactionId, string reason, string adminId)
+        {
+            var tx = await _db.PaymentTransactions
+                .Include(t => t.StudentCoursePayment)
+                .FirstOrDefaultAsync(t => t.Id == transactionId)
+                ?? throw new KeyNotFoundException($"PaymentTransaction {transactionId} not found.");
+
+            if (tx.IsSoftDeleted)
+                throw new InvalidOperationException("Transaction is already voided.");
+
+            // Mark as soft deleted
+            tx.IsSoftDeleted = true;
+            tx.DeletionReason = reason;
+            tx.DeletedAt = DateTime.UtcNow;
+            tx.UpdatedAt = DateTime.UtcNow;
+
+            // Recalculate parent payment
+            var scp = tx.StudentCoursePayment;
+            scp.PaidAmount -= tx.Amount;
+            
+            // Cannot have negative paid amount due to voiding
+            if (scp.PaidAmount < 0) scp.PaidAmount = 0;
+            
+            scp.RemainingAmount = scp.RequiredAmount - scp.PaidAmount;
+            scp.IsPaid = scp.RemainingAmount <= 0;
+            scp.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+
+            await _audit.LogAsync(
+                adminId,
+                "PaymentVoided",
+                "PaymentTransaction",
+                tx.Id,
+                null,
+                JsonSerializer.Serialize(new { reason, AmountVoided = tx.Amount, NewRemaining = scp.RemainingAmount }));
+        }
+
+        // =========================================
         // CreateSessionPaymentAsync
         // =========================================
 

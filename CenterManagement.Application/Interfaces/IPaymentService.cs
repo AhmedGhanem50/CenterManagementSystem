@@ -12,6 +12,8 @@ namespace CenterManagement.Application.Interfaces
         Task<PaymentTransaction> RecordPaymentAsync(
             RecordPaymentDto dto, string adminId);
 
+        Task VoidTransactionAsync(int transactionId, string reason, string adminId);
+
         Task<SessionPayment> CreateSessionPaymentAsync(
             CreateSessionPaymentDto dto, string adminId);
 

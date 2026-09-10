@@ -21,6 +21,7 @@ namespace CenterManagement.Application.DependencyInjection
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IAnalyticsService, AnalyticsService>();
+            services.AddScoped<ISystemSettingService, SystemSettingService>();
             // NotificationService is already registered — implementation replaced in-place for Phase 6
             return services;
         }

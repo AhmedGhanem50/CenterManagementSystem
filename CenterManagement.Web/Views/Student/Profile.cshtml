@@ -222,10 +222,15 @@
                         <img src="/Attendance/GetQr/@Model.UserId" alt="Student QR Code" class="w-48 h-48 mx-auto" />
                     </div>
                     <p class="text-label-sm text-outline mb-2">Scan to track attendance</p>
-                    <div class="bg-surface-container-low p-2 rounded text-center">
+                    <div class="bg-surface-container-low p-2 rounded text-center mb-3">
                         <p class="font-mono text-label-md text-on-surface select-all">@Model.UserId</p>
                         <p class="text-[10px] text-outline uppercase mt-1">Manual Entry Code</p>
                     </div>
+                    
+                    <a asp-action="Card" asp-route-id="@Model.StudentProfileId" target="_blank"
+                       class="w-full py-2.5 bg-secondary-container text-on-secondary-container rounded-lg font-label-md text-label-md hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-sm">
+                        <span class="material-symbols-outlined text-sm">badge</span> Print ID Card
+                    </a>
                 </div>
             </div>
         </div>

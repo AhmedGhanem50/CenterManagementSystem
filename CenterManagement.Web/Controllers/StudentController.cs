@@ -16,13 +16,16 @@ namespace CenterManagement.Web.Controllers
     {
         private readonly IStudentService _studentService;
         private readonly CenterManagementDbContext _db;
+        private readonly ISystemSettingService _settingService;
 
         public StudentController(
             IStudentService studentService,
-            CenterManagementDbContext db)
+            CenterManagementDbContext db,
+            ISystemSettingService settingService)
         {
             _studentService = studentService;
             _db = db;
+            _settingService = settingService;
         }
 
         private string GetAdminId() =>
@@ -393,6 +396,28 @@ namespace CenterManagement.Web.Controllers
         {
             var results = await _studentService.SearchStudentsAsync(q);
             return Json(results);
+        }
+
+        // =========================================
+        // GET /Student/Card/{id}
+        // =========================================
+
+        [HttpGet]
+        public async Task<IActionResult> Card(int id)
+        {
+            try
+            {
+                var profile = await _studentService.GetStudentProfileAsync(id);
+                var logoUrl = await _settingService.GetSettingAsync("CenterLogoUrl");
+                
+                ViewBag.CenterLogoUrl = string.IsNullOrEmpty(logoUrl) ? "/images/default-logo.png" : logoUrl;
+                
+                return View(profile);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         // =========================================

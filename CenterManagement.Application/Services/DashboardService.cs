@@ -45,13 +45,17 @@ namespace CenterManagement.Application.Services
             var newStudentsThisMonth = await _db.StudentProfiles
                 .CountAsync(s => s.CreatedAt >= monthStart);
 
+            var failedNotifications = await _db.Notifications
+                .CountAsync(n => !n.IsSent);
+
             return new DashboardKpiDto
             {
                 TotalStudents = totalStudents,
                 ActiveSessionsNow = activeSessionsNow,
                 AttendanceRateLast7Days = attendanceRate,
                 RevenueTodayAmount = revenueToday,
-                NewStudentsThisMonth = newStudentsThisMonth
+                NewStudentsThisMonth = newStudentsThisMonth,
+                FailedNotificationCount = failedNotifications
             };
         }
 

@@ -1,4 +1,4 @@
-﻿using CenterManagement.Domain.Common;
+using CenterManagement.Domain.Common;
 
 namespace CenterManagement.Domain.Entities
 {
@@ -23,5 +23,12 @@ namespace CenterManagement.Domain.Entities
 
         public ICollection<SessionPayment> SessionPayments
         { get; set; } = new List<SessionPayment>();
+
+        // Substitute Instructor (GAP-007)
+        public int? SubstituteInstructorProfileId { get; set; }
+        public InstructorProfile? SubstituteInstructor { get; set; }
+
+        // Grace Period Cancellation (GAP-009)
+        public DateTime? CanceledAt { get; set; }
     }
 }

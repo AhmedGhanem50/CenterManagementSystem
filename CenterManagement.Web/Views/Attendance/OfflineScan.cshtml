@@ -1,0 +1,330 @@
+@{
+    ViewData["Title"] = "Offline Attendance Scanner";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12 flex justify-between items-center">
+            <h2 class="h3 text-gray-800">Offline Attendance Scanner (PWA)</h2>
+            <div id="connectionStatus" class="px-4 py-2 rounded-full text-sm font-bold bg-green-100 text-green-700">
+                Online
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Scanner Column -->
+        <div class="col-md-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Scan QR Code</h6>
+                </div>
+                <div class="card-body text-center">
+                    <div id="reader" style="width: 100%; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; background-color: #f8f9fa;" class="mb-3 min-h-[300px] flex items-center justify-center">
+                        <span class="text-gray-500">Camera Feed</span>
+                    </div>
+                    <button id="startScanner" class="btn btn-primary w-100 mb-2">Start Camera</button>
+                    <button id="stopScanner" class="btn btn-secondary w-100" style="display:none;">Stop Camera</button>
+
+                    <hr />
+                    <p class="text-muted text-sm mt-3">Manual Entry (Fallback)</p>
+                    <div class="input-group">
+                        <input type="text" id="manualQrInput" class="form-control" placeholder="Enter Student ID" />
+                        <button class="btn btn-outline-primary" type="button" id="manualScanBtn">Process</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sync Queue Column -->
+        <div class="col-md-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 flex justify-between items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Offline Queue</h6>
+                    <button id="syncBtn" class="btn btn-sm btn-success" disabled>
+                        Sync Now <span id="queueCount" class="badge bg-white text-success ms-1">0</span>
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-striped table-hover m-0">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th>QR / ID</th>
+                                    <th>Scanned At</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scanLogBody">
+                                <!-- Log items will be injected here via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="emptyLogState" class="text-center p-5 text-muted">
+                        <span class="material-symbols-outlined text-4xl mb-2">inbox</span>
+                        <p>No offline scans in queue.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- jsQR Library for scanning (lightweight alternative to Html5Qrcode for offline reliability) -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script>
+        // IndexedDB Configuration
+        const DB_NAME = 'AttendancePWA';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'offlineScans';
+        let db;
+
+        // Initialize IndexedDB
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        
+        request.onerror = (event) => {
+            console.error('IndexedDB error:', event.target.error);
+        };
+
+        request.onsuccess = (event) => {
+            db = event.target.result;
+            loadQueue();
+        };
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+            }
+        };
+
+        // UI Elements
+        const statusBadge = document.getElementById('connectionStatus');
+        const syncBtn = document.getElementById('syncBtn');
+        const queueCountSpan = document.getElementById('queueCount');
+        const scanLogBody = document.getElementById('scanLogBody');
+        const emptyLogState = document.getElementById('emptyLogState');
+        const manualQrInput = document.getElementById('manualQrInput');
+        const manualScanBtn = document.getElementById('manualScanBtn');
+
+        // Connection Handling
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                statusBadge.textContent = 'Online';
+                statusBadge.className = 'px-4 py-2 rounded-full text-sm font-bold bg-green-100 text-green-700';
+                syncBtn.disabled = false;
+                loadQueue(); // Try to sync immediately if queue has items
+            } else {
+                statusBadge.textContent = 'Offline';
+                statusBadge.className = 'px-4 py-2 rounded-full text-sm font-bold bg-red-100 text-red-700';
+                syncBtn.disabled = true;
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus(); // Initial check
+
+        // Scanner Logic (Mocked HTML5 Video using jsQR)
+        // In a real PWA you would use navigator.mediaDevices.getUserMedia
+        
+        const startScannerBtn = document.getElementById('startScanner');
+        const stopScannerBtn = document.getElementById('stopScanner');
+        const readerDiv = document.getElementById('reader');
+        
+        let videoStream = null;
+
+        startScannerBtn.addEventListener('click', async () => {
+            readerDiv.innerHTML = '<video id="qr-video" style="width: 100%; height: 100%;"></video>';
+            const video = document.getElementById('qr-video');
+            
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                video.srcObject = videoStream;
+                video.setAttribute("playsinline", true);
+                video.play();
+                
+                requestAnimationFrame(tick);
+                
+                startScannerBtn.style.display = 'none';
+                stopScannerBtn.style.display = 'block';
+            } catch (err) {
+                console.error("Error accessing camera: ", err);
+                alert("Camera access denied or unavailable.");
+            }
+        });
+
+        stopScannerBtn.addEventListener('click', stopScanner);
+
+        function stopScanner() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+            readerDiv.innerHTML = '<span class="text-gray-500">Camera Feed</span>';
+            startScannerBtn.style.display = 'block';
+            stopScannerBtn.style.display = 'none';
+        }
+
+        function tick() {
+            if (!videoStream) return;
+            const video = document.getElementById('qr-video');
+            if (video && video.readyState === video.HAVE_ENOUGH_DATA) {
+                const canvasElement = document.createElement("canvas");
+                canvasElement.width = video.videoWidth;
+                canvasElement.height = video.videoHeight;
+                const canvas = canvasElement.getContext("2d");
+                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+                
+                if (code) {
+                    processScan(code.data);
+                    // Pause briefly to avoid multiple scans
+                    stopScanner();
+                    setTimeout(() => startScannerBtn.click(), 2000);
+                    return;
+                }
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // Manual Entry
+        manualScanBtn.addEventListener('click', () => {
+            const val = manualQrInput.value.trim();
+            if (val) {
+                processScan(val);
+                manualQrInput.value = '';
+            }
+        });
+
+        // Data Processing
+        function processScan(qrCode) {
+            const scanData = {
+                QrCode: qrCode,
+                ScanTime: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            
+            const request = store.add(scanData);
+            request.onsuccess = () => {
+                console.log('Saved to IndexedDB offline queue');
+                loadQueue();
+                
+                // If online, try immediate sync
+                if (navigator.onLine) {
+                    syncScans();
+                }
+            };
+        }
+
+        function loadQueue() {
+            if (!db) return;
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.getAll();
+
+            request.onsuccess = () => {
+                const scans = request.result;
+                updateQueueUI(scans);
+            };
+        }
+
+        function updateQueueUI(scans) {
+            queueCountSpan.textContent = scans.length;
+            
+            if (scans.length === 0) {
+                emptyLogState.style.display = 'block';
+                scanLogBody.innerHTML = '';
+                syncBtn.disabled = true;
+                return;
+            }
+
+            emptyLogState.style.display = 'none';
+            syncBtn.disabled = !navigator.onLine;
+
+            let html = '';
+            // Show newest first
+            scans.reverse().forEach(scan => {
+                const date = new Date(scan.ScanTime);
+                const timeString = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+                
+                html += `
+                    <tr>
+                        <td class="font-mono text-sm">${scan.QrCode}</td>
+                        <td>${timeString}</td>
+                        <td><span class="badge bg-warning text-dark">Pending Sync</span></td>
+                    </tr>
+                `;
+            });
+            scanLogBody.innerHTML = html;
+        }
+
+        syncBtn.addEventListener('click', syncScans);
+
+        async function syncScans() {
+            if (!navigator.onLine || !db) return;
+
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.getAll();
+
+            request.onsuccess = async () => {
+                const scans = request.result;
+                if (scans.length === 0) return;
+
+                const payload = scans.map(s => ({
+                    QrCode: s.QrCode,
+                    ScanTime: s.ScanTime
+                }));
+
+                try {
+                    syncBtn.innerHTML = 'Syncing...';
+                    syncBtn.disabled = true;
+
+                    const response = await fetch('/Attendance/BatchSync', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            // Clear IndexedDB on success
+                            clearQueue();
+                            alert(`Successfully synced ${scans.length} records!`);
+                        } else {
+                            alert("Sync failed: " + data.errorMessage);
+                        }
+                    } else {
+                        alert("Server error during sync.");
+                    }
+                } catch (err) {
+                    console.error("Sync error:", err);
+                    alert("Network error during sync.");
+                } finally {
+                    syncBtn.innerHTML = `Sync Now <span id="queueCount" class="badge bg-white text-success ms-1">${scans.length}</span>`;
+                    syncBtn.disabled = false;
+                }
+            };
+        }
+
+        function clearQueue() {
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            store.clear().onsuccess = () => {
+                loadQueue();
+            };
+        }
+    </script>
+}
